@@ -1,0 +1,133 @@
+/* ══════════════════════════════════════
+   ANIMATIONS & REVEAL
+══════════════════════════════════════ */
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Delay utilities */
+.delay-1 { transition-delay: 0.12s; }
+.delay-2 { transition-delay: 0.24s; }
+.delay-3 { transition-delay: 0.36s; }
+.delay-4 { transition-delay: 0.48s; }
+.delay-5 { transition-delay: 0.6s; }
+
+/* Hero specific — faster, staggered */
+#hero .reveal { transition-duration: 0.6s; }
+#hero .delay-1 { transition-delay: 0.1s; }
+#hero .delay-2 { transition-delay: 0.2s; }
+#hero .delay-3 { transition-delay: 0.3s; }
+#hero .delay-4 { transition-delay: 0.4s; }
+#hero .delay-5 { transition-delay: 0.5s; }
+
+/* Skill bar animation triggered by JS */
+.skill-fill.animate {
+  /* width set via JS */
+}
+
+/* Gradient text shimmer on hover */
+.section-heading {
+  background: linear-gradient(135deg, #eef2f8 0%, #cdd6e8 50%, #eef2f8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: background-position 0.5s;
+}
+.section-heading:hover {
+  background-position: right center;
+}
+
+/* Glow pulse on timeline dots */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(0,232,122,0.5); }
+  50% { box-shadow: 0 0 20px rgba(0,232,122,0.9), 0 0 40px rgba(0,232,122,0.3); }
+}
+.timeline-dot {
+  animation: dot-pulse 2.5s ease-in-out infinite;
+}
+
+/* Project card hover accent line sweep */
+.project-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; height: 1px; width: 0;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+.project-card:hover::after { width: 100%; }
+
+/* Nav link active state */
+.nav-link.active {
+  color: var(--accent) !important;
+}
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* Contact link hover */
+.contact-link svg {
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+/* Typewriter cursor blink */
+@keyframes type-blink {
+  0%, 100% { opacity: 1; }
+  49% { opacity: 1; }
+  50% { opacity: 0; }
+  99% { opacity: 0; }
+}
+
+/* Stagger for project cards */
+.project-card:nth-child(1) { transition-delay: 0s; }
+.project-card:nth-child(2) { transition-delay: 0.08s; }
+.project-card:nth-child(3) { transition-delay: 0.16s; }
+.project-card:nth-child(4) { transition-delay: 0.24s; }
+.project-card:nth-child(5) { transition-delay: 0.32s; }
+.project-card:nth-child(6) { transition-delay: 0.40s; }
+
+/* Section entrance */
+@keyframes section-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Roadmap phase hover */
+.rp-item {
+  transition: border-color 0.25s, background 0.25s, transform 0.25s;
+}
+.rp-item:hover {
+  transform: translateX(4px);
+}
+
+/* Skill category hover accent */
+.skill-category {
+  position: relative; overflow: hidden;
+}
+.skill-category::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.skill-category:hover::before {
+  transform: scaleX(1);
+}
+
+/* Mobile menu open animation */
+.nav-mobile {
+  animation: slide-down 0.25s ease;
+}
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
