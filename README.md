@@ -141,7 +141,7 @@ As you build each lab, create these repos and link them in `index.html`:
 
 ## 🛠 Tech Stack
 
-- **HTML5 / CSS3 / Vanilla JS** — zero framework dependencies, maximum performance
+- **HTML5 / CSS3 / JS** —
 - **GitHub** — version control + source of truth
 - **Netlify** — CI/CD deployment on every push, free SSL, form handling
 - **Netlify Forms** — contact form backend, no server required
@@ -149,4 +149,4 @@ As you build each lab, create these repos and link them in `index.html`:
 
 ---
 
-*Built with purpose. Deployed with security. Documented like a professional.*
+Copyright (c) 2026 Keelen Carrera
