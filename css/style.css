@@ -605,6 +605,101 @@ footer {
 .footer-links a:hover { color: var(--accent); }
 .footer-copy { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
 
+/* ── CERTIFICATIONS SECTION ── */
+#certifications { background: var(--bg); border-top: 1px solid var(--border); }
+.certs-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.cred-card {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 28px; position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.25s, box-shadow 0.3s;
+}
+.cred-card:hover {
+  border-color: var(--border2); transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+.cred-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cred-icon { font-size: 28px; }
+.cred-status-badge {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+  text-transform: uppercase; padding: 4px 10px; border: 1px solid;
+}
+.cred-status-badge.active {
+  color: var(--accent); border-color: rgba(0,232,122,0.3);
+  background: var(--accent-dim);
+}
+.cred-card h3 {
+  font-family: var(--font-display); font-size: 17px; font-weight: 700;
+  color: var(--white); margin-bottom: 6px; line-height: 1.2;
+}
+.cred-issuer {
+  display: block; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 1px; color: var(--text-muted); margin-bottom: 16px;
+}
+.cred-detail-rows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.cred-row { display: flex; gap: 12px; align-items: baseline; }
+.cred-key {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text-dim); min-width: 52px;
+}
+.cred-val { font-family: var(--font-mono); font-size: 12px; color: var(--text); }
+.cred-id-val {
+  font-size: 10px; color: var(--text-muted); word-break: break-all;
+  background: var(--bg2); padding: 3px 6px; border: 1px solid var(--border);
+}
+.cred-domain {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 4px 10px; border: 1px solid;
+  display: inline-block;
+}
+.security-domain { color: var(--accent); border-color: rgba(0,232,122,0.25); background: var(--accent-dim); }
+.cloud-domain { color: var(--blue); border-color: rgba(56,189,248,0.25); background: var(--blue-dim); }
+.logistics-domain { color: var(--amber); border-color: rgba(251,191,36,0.25); background: var(--amber-dim); }
+
+/* Logistics cert badge variant */
+.cert-badge.logistics-cert { border-color: rgba(251,191,36,0.3); background: var(--amber-dim); }
+
+/* Live demo project link */
+.proj-link-demo { color: var(--accent) !important; border-color: rgba(0,232,122,0.3) !important; }
+.proj-link-demo:hover { background: var(--accent-dim) !important; }
+.logistics-accent { background: linear-gradient(90deg, var(--amber), transparent) !important; }
+
+/* Live site badge in project meta */
+.pm-live-link {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+  color: var(--accent); border: 1px solid rgba(0,232,122,0.3);
+  background: var(--accent-dim); padding: 4px 10px;
+  transition: all 0.2s;
+}
+.pm-live-link:hover { background: rgba(0,232,122,0.2); }
+
+/* Contact form extras */
+.form-group select {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--white); font-family: var(--font-mono); font-size: 13px;
+  padding: 12px 16px; outline: none; width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: var(--radius); appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23556478' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.form-group select:focus {
+  border-color: var(--accent-glow);
+  box-shadow: 0 0 0 3px rgba(0,232,122,0.08);
+}
+.form-group select option { background: var(--surface2); color: var(--white); }
+.form-note {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);
+  text-align: center; margin-top: 4px;
+}
+.form-note strong { color: var(--text-muted); font-weight: normal; }
+
+
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
   .nav-links { display: none; }
