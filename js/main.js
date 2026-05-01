@@ -240,9 +240,26 @@
       const original = btn.textContent;
       btn.textContent = 'Sending...';
       btn.disabled = true;
+      const data = new FormData(form);
 
+      // Log submission to localStorage as a local record
+      const record = {
+        timestamp: new Date().toISOString(),
+        name: data.get('name') || '',
+        email: data.get('email') || '',
+        company: data.get('company') || '',
+        phone: data.get('phone') || '',
+        inquiry: data.get('inquiry') || '',
+        subject: data.get('subject') || '',
+        message: data.get('message') || ''
+      };
       try {
-        const data = new FormData(form);
+        const existing = JSON.parse(localStorage.getItem('kc_contact_records') || '[]');
+        existing.push(record);
+        localStorage.setItem('kc_contact_records', JSON.stringify(existing));
+      } catch (_) { /* storage unavailable */ }
+       
+      try {
         const response = await fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -252,7 +269,15 @@
           btn.textContent = '✓ Message Sent';
           btn.style.background = 'rgba(0,232,122,0.15)';
           btn.style.color = 'var(--accent)';
+          btn.style.borderColor = 'rgba(0,232,122,0.3)';
           form.reset();
+           setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.borderColor = '';
+            btn.disabled = false;
+          }, 4000);
         } else {
           throw new Error('Form error');
         }
