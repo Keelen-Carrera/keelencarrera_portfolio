@@ -35,14 +35,14 @@
       cursor.style.height = '18px';
       trail.style.width = '48px';
       trail.style.height = '48px';
-      trail.style.borderColor = 'rgba(0,232,122,0.5)';
+      trail.style.borderColor = 'rgba(249,115,22,0.5)';
     });
     el.addEventListener('mouseleave', () => {
       cursor.style.width = '10px';
       cursor.style.height = '10px';
       trail.style.width = '32px';
       trail.style.height = '32px';
-      trail.style.borderColor = 'rgba(0,232,122,0.3)';
+      trail.style.borderColor = 'rgba(249,115,22,0.3)';
     });
   });
 
@@ -118,8 +118,8 @@
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.size + glow * 2, 0, Math.PI * 2);
         ctx.fillStyle = glow > 0.1
-          ? `rgba(0,232,122,${alpha})`
-          : `rgba(56,189,248,${alpha})`;
+          ? `rgba(249,115,22,${alpha})`
+          : `rgba(167,139,250,${alpha})`;
         ctx.fill();
       });
 
@@ -258,7 +258,7 @@
         existing.push(record);
         localStorage.setItem('kc_contact_records', JSON.stringify(existing));
       } catch (_) { /* storage unavailable */ }
-       
+
       try {
         const response = await fetch('/', {
           method: 'POST',
@@ -267,11 +267,11 @@
         });
         if (response.ok) {
           btn.textContent = '✓ Message Sent';
-          btn.style.background = 'rgba(0,232,122,0.15)';
+          btn.style.background = 'rgba(249,115,22,0.15)';
           btn.style.color = 'var(--accent)';
-          btn.style.borderColor = 'rgba(0,232,122,0.3)';
+          btn.style.borderColor = 'rgba(249,115,22,0.3)';
           form.reset();
-           setTimeout(() => {
+          setTimeout(() => {
             btn.textContent = original;
             btn.style.background = '';
             btn.style.color = '';
