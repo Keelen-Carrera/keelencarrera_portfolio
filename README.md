@@ -16,7 +16,6 @@ portfolio/
 │   └── animations.css  # Scroll reveals, transitions, hover effects
 ├── js/
 │   └── main.js         # Canvas grid, cursor, scroll behavior, form
-├── netlify.toml        # Netlify config, security headers, redirects
 └── README.md
 ```
 
