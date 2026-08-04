@@ -70,8 +70,8 @@
     }
 
     function resize() {
-      W = canvas.width = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight;
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
       buildHexes();
     }
 
@@ -88,14 +88,12 @@
 
 
     document.addEventListener('mousemove', e => {
-      const rect = canvas.getBoundingClientRect();
-      mx = e.clientX - rect.left;
-      my = e.clientY - rect.top;
+      mx = e.clientX;
+      my = e.clientY;
     });
 
-    canvas.addEventListener('click', e => {
-      const rect = canvas.getBoundingClientRect();
-      ripples.push({ x: e.clientX - rect.left, y: e.clientY - rect.top, r: 0, life: 1 });
+    document.addEventListener('click', e => {
+      ripples.push({ x: e.clientX, y: e.clientY, r: 0, life: 1 });
     });
 
 
@@ -330,6 +328,41 @@
     nextBtn?.addEventListener('click', () => goTo(current + 1));
     dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
   });
+  // ── LIGHTBOX ────────────────────────────────────────
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.innerHTML = `
+    <div class="lightbox-inner">
+      <button class="lightbox-close" aria-label="Close image">✕</button>
+      <img class="lightbox-img" src="" alt="" />
+      <span class="lightbox-caption"></span>
+    </div>`;
+  document.body.appendChild(lb);
 
+  const lbImg = lb.querySelector('.lightbox-img');
+  const lbCaption = lb.querySelector('.lightbox-caption');
+
+  function openLightbox(src, alt) {
+    lbImg.src = src;
+    lbImg.alt = alt;
+    lbCaption.textContent = alt || '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.carousel-slide img').forEach(img => {
+    img.addEventListener('click', () => openLightbox(img.src, img.alt));
+  });
+
+  lb.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 })();
