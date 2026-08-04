@@ -35,14 +35,14 @@
       cursor.style.height = '18px';
       trail.style.width = '48px';
       trail.style.height = '48px';
-      trail.style.borderColor = 'rgba(249,115,22,0.5)';
+      trail.style.borderColor = 'rgba(31, 28, 21, 0.5)';
     });
     el.addEventListener('mouseleave', () => {
       cursor.style.width = '10px';
       cursor.style.height = '10px';
       trail.style.width = '32px';
       trail.style.height = '32px';
-      trail.style.borderColor = 'rgba(249,115,22,0.3)';
+      trail.style.borderColor = 'rgba(212,164,32,0.3)';
     });
   });
 
@@ -50,77 +50,91 @@
   const canvas = document.getElementById('gridCanvas');
   if (canvas) {
     const ctx = canvas.getContext('2d');
-    let W, H, dots = [];
+    const R = 26;                      // hex circumradius
+    const HW = Math.sqrt(3) * R;       // pointy-top hex width
+    const VSTEP = R * 1.5;             // vertical step between rows
+    let W, H, hexes = [], ripples = [];
+    let mx = -9999, my = -9999;
 
-    function resize() {
-      W = canvas.width = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight;
-      buildDots();
-    }
-
-    function buildDots() {
-      dots = [];
-      const spacing = 48;
-      for (let x = 0; x < W; x += spacing) {
-        for (let y = 0; y < H; y += spacing) {
-          dots.push({
-            x, y,
-            ox: x, oy: y,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
-            size: Math.random() * 1.2 + 0.4,
-            alpha: Math.random() * 0.5 + 0.1
-          });
+    function buildHexes() {
+      hexes = [];
+      const cols = Math.ceil(W / HW) + 2;
+      const rows = Math.ceil(H / VSTEP) + 2;
+      for (let row = -1; row < rows; row++) {
+        for (let col = -1; col < cols; col++) {
+          const x = col * HW + (row % 2 === 0 ? 0 : HW / 2);
+          const y = row * VSTEP;
+          hexes.push({ x, y, glow: 0 });
         }
       }
     }
 
-    let mx = -9999, my = -9999;
+    function resize() {
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+      buildHexes();
+    }
+
+    function hexPath(cx, cy) {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = Math.PI / 3 * i + Math.PI / 6;
+        i === 0
+          ? ctx.moveTo(cx + R * Math.cos(a), cy + R * Math.sin(a))
+          : ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
+      }
+      ctx.closePath();
+    }
+
+
     document.addEventListener('mousemove', e => {
       const rect = canvas.getBoundingClientRect();
       mx = e.clientX - rect.left;
       my = e.clientY - rect.top;
     });
 
+    canvas.addEventListener('click', e => {
+      const rect = canvas.getBoundingClientRect();
+      ripples.push({ x: e.clientX - rect.left, y: e.clientY - rect.top, r: 0, life: 1 });
+    });
+
+
     function draw() {
       ctx.clearRect(0, 0, W, H);
 
-      // Draw grid lines
-      ctx.strokeStyle = 'rgba(26,38,64,0.5)';
-      ctx.lineWidth = 0.5;
-      const spacing = 48;
-      for (let x = 0; x <= W; x += spacing) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-      }
-      for (let y = 0; y <= H; y += spacing) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-      }
+      ripples = ripples.filter(r => r.life > 0);
+      ripples.forEach(r => { r.r += 5; r.life -= 0.013; });
 
-      // Draw & animate dots
-      dots.forEach(d => {
-        // Mouse repulsion
-        const dx = d.x - mx, dy = d.y - my;
+      hexes.forEach(h => {
+        const dx = h.x - mx, dy = h.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 100) {
-          const force = (100 - dist) / 100;
-          d.x += (dx / dist) * force * 2;
-          d.y += (dy / dist) * force * 2;
+        const target = dist < 170 ? Math.pow(1 - dist / 170, 1.6) : 0;
+        h.glow += (target - h.glow) * 0.09;
+
+        let rGlow = 0;
+        ripples.forEach(r => {
+          const d = Math.sqrt((h.x - r.x) ** 2 + (h.y - r.y) ** 2);
+          const wave = Math.abs(d - r.r);
+          if (wave < 30) rGlow = Math.max(rGlow, (1 - wave / 30) * r.life);
+        });
+
+        const g = h.glow;
+        const total = Math.min(1, g + rGlow * 0.85);
+        const isRipple = rGlow > g;
+
+        hexPath(h.x, h.y);
+
+        if (total > 0.03) {
+          ctx.fillStyle = isRipple
+            ? `rgba(0,196,184,${total * 0.13})`
+            : `rgba(212,164,32,${total * 0.11})`;
+          ctx.fill();
         }
-        // Drift back to origin
-        d.x += (d.ox - d.x) * 0.04;
-        d.y += (d.oy - d.y) * 0.04;
-
-        // Proximity glow near mouse
-        const mdist = Math.sqrt(Math.pow(d.x - mx, 2) + Math.pow(d.y - my, 2));
-        const glow = mdist < 120 ? (120 - mdist) / 120 : 0;
-        const alpha = d.alpha + glow * 0.7;
-
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.size + glow * 2, 0, Math.PI * 2);
-        ctx.fillStyle = glow > 0.1
-          ? `rgba(249,115,22,${alpha})`
-          : `rgba(167,139,250,${alpha})`;
-        ctx.fill();
+        ctx.strokeStyle = isRipple
+          ? `rgba(0,196,184,${0.06 + total * 0.38})`
+          : `rgba(212,164,32,${0.05 + total * 0.32})`;
+        ctx.lineWidth = 0.5 + total * 0.9;
+        ctx.stroke();
       });
 
       requestAnimationFrame(draw);
@@ -267,9 +281,9 @@
         });
         if (response.ok) {
           btn.textContent = '✓ Message Sent';
-          btn.style.background = 'rgba(249,115,22,0.15)';
+          btn.style.background = 'rgba(212,164,32,0.15)';
           btn.style.color = 'var(--accent)';
-          btn.style.borderColor = 'rgba(249,115,22,0.3)';
+          btn.style.borderColor = 'rgba(212,164,32,0.3)';
           form.reset();
           setTimeout(() => {
             btn.textContent = original;
