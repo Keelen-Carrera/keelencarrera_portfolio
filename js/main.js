@@ -106,7 +106,7 @@
       hexes.forEach(h => {
         const dx = h.x - mx, dy = h.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const target = dist < 170 ? Math.pow(1 - dist / 170, 1.6) : 0;
+        const target = dist < 150 ? Math.pow(1 - dist / 150, 1.6) : 0;
         h.glow += (target - h.glow) * 0.09;
 
         let rGlow = 0;
@@ -124,13 +124,13 @@
 
         if (total > 0.03) {
           ctx.fillStyle = isRipple
-            ? `rgba(0,196,184,${total * 0.13})`
-            : `rgba(212,164,32,${total * 0.11})`;
+            ? `rgba(0,196,184,${total * 0.1})`
+            : `rgba(212,164,32,${total * 0.09})`;
           ctx.fill();
         }
         ctx.strokeStyle = isRipple
-          ? `rgba(0,196,184,${0.06 + total * 0.38})`
-          : `rgba(212,164,32,${0.05 + total * 0.32})`;
+          ? `rgba(0,196,184,${0.05 + total * 0.3})`
+          : `rgba(212,164,32,${0.04 + total * 0.26})`;
         ctx.lineWidth = 0.5 + total * 0.9;
         ctx.stroke();
       });
@@ -216,19 +216,6 @@
   document.querySelectorAll('#hero .reveal').forEach(el => {
     setTimeout(() => el.classList.add('visible'), 100);
   });
-
-  // ── SKILL BAR ANIMATION ─────────────────────────────
-  const skillBars = document.querySelectorAll('.skill-fill');
-  const skillObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const pct = entry.target.dataset.pct;
-        entry.target.style.width = pct + '%';
-        skillObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.3 });
-  skillBars.forEach(bar => skillObserver.observe(bar));
 
   // ── TERMINAL TYPEWRITER ─────────────────────────────
   const termBody = document.getElementById('terminalBody');
